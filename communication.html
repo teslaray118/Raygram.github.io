@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dallzergram Chat</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        /* General Styles - Instagram-like theme */
+        :root {
+            --ig-primary-bg: #fafafa;
+            --ig-card-bg: #ffffff;
+            --ig-border: #dbdbdb;
+            --ig-text: #262626;
+            --ig-secondary-text: #8e8e8e;
+            --ig-blue: #0095f6;
+            --ig-green: #38a169;
+            --ig-red: #ed4956;
+            --ig-hover-bg: #f5f5f5;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--ig-primary-bg);
+            color: var(--ig-text);
+            display: flex;
+            height: 100vh;
+        }
+
+        /* Sidebar navigation */
+        .sidebar {
+            width: 73px; /* Collapsed width */
+            background-color: var(--ig-card-bg);
+            border-right: 1px solid var(--ig-border);
+            padding: 20px 12px;
+            display: flex;
+            flex-direction: column;
+            transition: width 0.3s ease;
+        }
+
+        .sidebar:hover {
+            width: 250px; /* Expanded width on hover */
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            color: var(--ig-text);
+            text-align: center;
+        }
+
+        .logo-full {
+            display: none; /* Hide full logo by default */
+        }
+
+        .sidebar:hover .logo-full {
+            display: block;
+        }
+        
+        .sidebar:hover .logo-icon {
+            display: none;
+        }
+
+        .logo-icon {
+            font-size: 28px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px;
+            margin-bottom: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            color: var(--ig-text);
+            border-radius: 8px;
+            transition: background-color 0.2s;
+        }
+
+        .nav-item i {
+            font-size: 20px;
+            color: var(--ig-secondary-text);
+            min-width: 24px; /* Ensure icon doesn't shift on hover */
+        }
+        
+        .nav-item span {
+            display: none; /* Hide text by default */
+        }
+        
+        .sidebar:hover .nav-item span {
+            display: inline-block;
+        }
+
+        .nav-item:hover {
+            background-color: var(--ig-hover-bg);
+        }
+
+        .nav-item.active {
+            font-weight: 700;
+            color: var(--ig-blue);
+        }
+
+        .nav-item.active i {
+            color: var(--ig-blue);
+        }
+
+        #usernameDisplay {
+            margin-top: auto;
+            color: var(--ig-secondary-text);
+            font-size: 14px;
+            padding: 12px;
+        }
+
+        /* Main content area */
+        .main-content {
+            flex: 1;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .main-content.active-section {
+            display: flex !important;
+        }
+
+        .content-header {
+            padding: 20px;
+            font-size: 24px;
+            font-weight: 600;
+            border-bottom: 1px solid var(--ig-border);
+        }
+
+        /* Messages layout */
+        .messages-container {
+            display: flex;
+            flex: 1;
+            background: var(--ig-card-bg);
+        }
+        
+        .messages-container .content-header {
+            border-bottom: none;
+        }
+
+        /* User list */
+        .user-list {
+            width: 380px;
+            background: var(--ig-card-bg);
+            border-right: 1px solid var(--ig-border);
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-list-header {
+            padding: 24px 20px;
+            font-size: 24px;
+            font-weight: 600;
+            border-bottom: 1px solid var(--ig-border);
+        }
+        
+        .user-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            gap: 12px;
+            cursor: pointer;
+            border-bottom: 1px solid var(--ig-border);
+            transition: background-color 0.2s;
+        }
+
+        .user-item:hover, .user-item.active-chat {
+            background: var(--ig-hover-bg);
+        }
+
+        .profile-pic {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #eee;
+            border: 2px solid #ccc;
+        }
+        
+        .profile-pic.online {
+             border-color: var(--ig-green);
+        }
+
+        .username {
+            font-weight: 600;
+        }
+
+        /* Chat area */
+        .chat-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: var(--ig-card-bg);
+        }
+
+        .chat-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--ig-border);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .chat-header-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-header h3 {
+            font-weight: 600;
+        }
+        
+        .chat-status {
+            font-size: 12px;
+            color: var(--ig-secondary-text);
+        }
+
+        .chat-log {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: var(--ig-primary-bg);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .message {
+            max-width: 60%;
+            padding: 10px 15px;
+            border-radius: 20px;
+        }
+        
+        .message.received {
+            background-color: var(--ig-border);
+            align-self: flex-start;
+        }
+        
+        .message.sent {
+            background-color: var(--ig-blue);
+            color: white;
+            align-self: flex-end;
+        }
+
+        .chat-input-wrapper {
+            padding: 15px 20px;
+            border-top: 1px solid var(--ig-border);
+        }
+
+        .chat-input {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 20px;
+            border: 1px solid var(--ig-border);
+            border-radius: 24px;
+            background-color: var(--ig-hover-bg);
+        }
+
+        .chat-input input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            outline: none;
+            font-size: 16px;
+        }
+
+        .chat-input button {
+            background: none;
+            border: none;
+            color: var(--ig-blue);
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        .chat-input button:disabled {
+            color: #b2dffc;
+            cursor: not-allowed;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: 60px;
+                flex-direction: row;
+                justify-content: space-around;
+                border-right: none;
+                border-top: 1px solid var(--ig-border);
+                position: fixed;
+                bottom: 0;
+                z-index: 1000;
+            }
+            
+            .sidebar:hover {
+                width: 100%;
+            }
+
+            body {
+                flex-direction: column;
+            }
+
+            .logo, #usernameDisplay, .sidebar:hover .nav-item span {
+                display: none;
+            }
+
+            .nav-item {
+                flex-direction: column;
+                gap: 5px;
+                padding: 5px;
+                font-size: 12px;
+            }
+            
+            .nav-item i {
+                font-size: 22px;
+            }
+
+            .main-content {
+                margin-bottom: 60px; /* Space for the fixed bottom nav */
+            }
+
+            #messages .messages-container {
+                flex-direction: column;
+            }
+
+            .user-list {
+                width: 100%;
+                height: 100%;
+                position: absolute;
+                top: 0;
+                left: 0;
+                z-index: 999;
+                display: none;
+            }
+
+            .user-list.active {
+                display: flex;
+            }
+            
+            .chat-area {
+                z-index: 1000;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">
+            <span class="logo-full">Dallzergram</span>
+            <i class="fa-brands fa-instagram logo-icon"></i>
+        </div>
+        <div class="nav-item active" onclick="switchSection('home', this)"><i class="fa-solid fa-house"></i><span>Home</span></div>
+        <div class="nav-item" onclick="switchSection('explore', this)"><i class="fa-regular fa-compass"></i><span>Explore</span></div>
+        <div class="nav-item" onclick="switchSection('messages', this)"><i class="fa-solid fa-paper-plane"></i><span>Messages</span></div>
+        <div class="nav-item" onclick="switchSection('notifications', this)"><i class="fa-regular fa-heart"></i><span>Notifications</span></div>
+        <div class="nav-item" onclick="switchSection('profile', this)"><i class="fa-regular fa-user"></i><span>Profile</span></div>
+        <div class="nav-item" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></div>
+        <div id="usernameDisplay">Welcome</div>
+    </div>
+
+    <div class="main-content" id="home">
+        <h2 class="content-header">Home feed</h2>
+    </div>
+    <div class="main-content" id="explore">
+        <h2 class="content-header">Explore</h2>
+    </div>
+
+    <div class="main-content" id="messages">
+        <div class="messages-container">
+            <div class="user-list" id="accounts-list">
+                <h2 class="user-list-header">Messages</h2>
+                <div style="padding: 20px; text-align: center;">Loading...</div>
+            </div>
+            <div class="chat-area">
+                <div class="chat-header" id="chatHeader">
+                    <div class="profile-pic"></div>
+                    <div class="chat-header-info">
+                        <h3 id="chatWith">Select a user to start chatting</h3>
+                        <span class="chat-status"></span>
+                    </div>
+                </div>
+                <div class="chat-log" id="chatLog"></div>
+                <div class="chat-input-wrapper">
+                    <div class="chat-input" style="display:none;">
+                        <input type="text" id="chatInput" placeholder="Message..." />
+                        <button id="sendButton" onclick="sendMessage()">Send</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-content" id="notifications">
+        <h2 class="content-header">Notifications</h2>
+    </div>
+    <div class="main-content" id="profile">
+        <h2 class="content-header">Profile</h2>
+    </div>
+
+    <script>
+        let currentChatUser = null;
+        const currentUser = localStorage.getItem("username");
+
+        function showUsername() {
+            document.getElementById("usernameDisplay").textContent = currentUser ? "Welcome, " + currentUser : "Guest";
+        }
+
+        async function fetchAccounts() {
+            try {
+                const res = await fetch('/accounts');
+                const accounts = await res.json();
+                const list = document.getElementById('accounts-list');
+                list.innerHTML = `<h2 class="user-list-header">Messages</h2>`;
+                accounts.forEach(acc => {
+                    if (acc.username !== currentUser) {
+                        const div = document.createElement('div');
+                        div.className = 'user-item';
+                        div.onclick = () => openChat(acc.username, div);
+
+                        const pic = document.createElement('div');
+                        pic.className = 'profile-pic' + (acc.online ? ' online' : '');
+
+                        const name = document.createElement('span');
+                        name.className = 'username';
+                        name.textContent = acc.username;
+
+                        div.appendChild(pic);
+                        div.appendChild(name);
+                        list.appendChild(div);
+                    }
+                });
+            } catch (e) {
+                console.error('Failed to fetch accounts:', e);
+                document.getElementById('accounts-list').innerHTML = `<h2 class="user-list-header">Messages</h2><div style="padding: 20px; text-align: center;">Error loading accounts.</div>`;
+            }
+        }
+
+        function openChat(username, element) {
+            // Remove active class from all user items
+            document.querySelectorAll('.user-item').forEach(item => item.classList.remove('active-chat'));
+            // Add active class to the clicked item
+            element.classList.add('active-chat');
+
+            currentChatUser = username;
+            document.getElementById("chatWith").textContent = username;
+            document.querySelector(".chat-input").style.display = "flex";
+            
+            // Update chat header profile pic and status
+            const pic = document.querySelector('#chatHeader .profile-pic');
+            const status = document.querySelector('.chat-status');
+            pic.className = element.querySelector('.profile-pic').className;
+            status.textContent = pic.classList.contains('online') ? 'Active now' : 'Offline';
+
+            loadMessages();
+        }
+
+        async function loadMessages() {
+            if (!currentChatUser) return;
+            const res = await fetch('/get-messages', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ user1: currentUser, user2: currentChatUser })
+            });
+            const messages = await res.json();
+            const chatLog = document.getElementById('chatLog');
+            chatLog.innerHTML = '';
+            messages.forEach(msg => {
+                const div = document.createElement('div');
+                div.className = 'message ' + (msg.from === currentUser ? 'sent' : 'received');
+                div.textContent = msg.message;
+                chatLog.appendChild(div);
+            });
+            chatLog.scrollTop = chatLog.scrollHeight;
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById("chatInput");
+            const message = input.value.trim();
+            if (!message || !currentChatUser) return;
+            await fetch('/message', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ from: currentUser, to: currentChatUser, message })
+            });
+            input.value = '';
+            loadMessages();
+        }
+
+        function logout() {
+            fetch('/logout', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username: currentUser })
+            }).then(() => {
+                localStorage.removeItem('username');
+                window.location.href = 'login.html';
+            });
+        }
+
+        function switchSection(sectionId, element) {
+            // Remove active class from all main content divs
+            document.querySelectorAll('.main-content').forEach(div => div.classList.remove('active-section'));
+            // Add active class to the specified main content div
+            document.getElementById(sectionId).classList.add('active-section');
+            
+            // Update active state in the sidebar
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            if(element) {
+                 element.classList.add('active');
+            }
+        }
+
+        window.onload = () => {
+            showUsername();
+            fetchAccounts();
+            setInterval(fetchAccounts, 5000);
+            setInterval(() => { if (currentChatUser) loadMessages(); }, 3000);
+            switchSection('messages', document.querySelector('.nav-item:nth-child(4)')); // Set 'Messages' as the default active section
+        };
+    </script>
+</body>
+</html>

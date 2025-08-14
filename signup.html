@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dallzergram Signup</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Poppins:wght@400;600;700&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    :root {
+      --bg-dark: #0d0d1a;
+      --highlight-color: #38b4f2;
+      --button-start: #6a11cb;
+      --button-end: #2575fc;
+      --text-primary: #e0e0ff;
+      --text-secondary: #a0a0ff;
+      --input-bg: rgba(44, 44, 44, 0.9);
+      --input-border: rgba(70, 70, 90, 0.8);
+      --bubble-color: rgba(255, 255, 255, 0.08);
+      --shadow-glow: 0 0 15px rgba(56, 180, 242, 0.7);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-primary);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      letter-spacing: 1px;
+    }
+
+    /* Grid background */
+    .grid-bg {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+      background-image:
+        linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px);
+      background-size: 50px 50px;
+      animation: grid-pan 60s linear infinite;
+    }
+    @keyframes grid-pan {
+      from { background-position: 0 0; }
+      to { background-position: -50px -50px; }
+    }
+
+    /* Floating bubbles */
+    .bubble {
+      position: absolute;
+      background: var(--bubble-color);
+      border-radius: 50%;
+      animation: float 20s infinite ease-in-out;
+      z-index: 2;
+    }
+    .bubble:nth-child(1) { top: 15%; left: 15%; width: 50px; height: 50px; animation-duration: 18s; }
+    .bubble:nth-child(2) { bottom: 10%; right: 12%; width: 80px; height: 80px; animation-duration: 22s; animation-delay: 2s; }
+    .bubble:nth-child(3) { top: 45%; right: 20%; width: 60px; height: 60px; animation-duration: 25s; animation-delay: 5s; }
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(30deg); }
+    }
+
+    /* Container card */
+    .container {
+      position: relative;
+      z-index: 10;
+      max-width: 400px;
+      width: 90%;
+      background: rgba(20, 20, 30, 0.85);
+      border-radius: 20px;
+      padding: 40px 30px;
+      box-shadow: 0 0 20px rgba(56, 180, 242, 0.6);
+      backdrop-filter: blur(8px);
+      animation: fadeInScale 1s ease-out;
+      border: 1px solid rgba(56, 180, 242, 0.4);
+      text-align: left;
+    }
+    @keyframes fadeInScale {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    /* Glitch heading */
+    h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 3.2rem;
+      margin-bottom: 25px;
+      color: var(--highlight-color);
+      text-shadow: var(--shadow-glow);
+      animation: glitch 1.5s linear infinite alternate;
+      text-align: center;
+    }
+    @keyframes glitch {
+      0% { text-shadow: 0 0 5px var(--highlight-color); transform: translate(0, 0); }
+      20% { text-shadow: 0 0 5px var(--highlight-color); transform: translate(-2px, 2px); }
+      40% { text-shadow: 0 0 5px var(--highlight-color); transform: translate(2px, -2px); }
+      60% { text-shadow: 0 0 5px var(--highlight-color); transform: translate(-1px, 1px); }
+      80% { text-shadow: 0 0 5px var(--highlight-color); transform: translate(1px, -1px); }
+      100% { text-shadow: 0 0 5px var(--highlight-color); transform: translate(0, 0); }
+    }
+
+    /* Form inputs */
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+      padding: 14px 18px;
+      border-radius: 12px;
+      border: 1px solid var(--input-border);
+      background-color: var(--input-bg);
+      color: var(--text-primary);
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
+    input::placeholder {
+      color: var(--text-secondary);
+    }
+    input:focus {
+      border-color: var(--highlight-color);
+      box-shadow: 0 0 8px var(--highlight-color);
+    }
+
+    /* Submit button */
+    button {
+      padding: 14px;
+      border: none;
+      border-radius: 30px;
+      background: linear-gradient(45deg, var(--button-start), var(--button-end));
+      color: white;
+      font-size: 1.2rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 0 15px rgba(106, 17, 203, 0.7);
+      overflow: hidden;
+      position: relative;
+      z-index: 10;
+    }
+    button:hover {
+      transform: translateY(-5px);
+      box-shadow:
+        0 5px 25px rgba(106, 17, 203, 0.9),
+        0 0 50px rgba(37, 117, 252, 0.7);
+    }
+    button::before {
+      content: '';
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 150%; height: 150%;
+      background: rgba(255, 255, 255, 0.1);
+      transform: translate(-50%, -50%) rotate(45deg);
+      transition: all 0.5s ease;
+      z-index: -1;
+    }
+    button:hover::before {
+      transform: translate(-50%, -50%) rotate(90deg) scale(1.5);
+      opacity: 0;
+    }
+
+    /* Toggle dark mode text */
+    .toggle-dark {
+      margin-top: 25px;
+      text-align: center;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      cursor: pointer;
+      user-select: none;
+      transition: color 0.3s ease;
+    }
+    .toggle-dark:hover {
+      color: var(--highlight-color);
+    }
+
+    /* Link below form */
+    .link {
+      margin-top: 18px;
+      text-align: center;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+    .link a {
+      color: var(--highlight-color);
+      text-decoration: none;
+      font-weight: 600;
+      transition: text-decoration 0.3s ease;
+    }
+    .link a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="grid-bg"></div>
+
+  <div class="bubble"></div>
+  <div class="bubble"></div>
+  <div class="bubble"></div>
+
+  <div class="container">
+    <h1>Create Account</h1>
+    <form id="signup-form" onsubmit="signup(event)">
+      <input type="text" id="username" placeholder="Username" required autocomplete="username" />
+      <input type="email" id="email" placeholder="Email" required autocomplete="email" />
+      <input type="password" id="password" placeholder="Password" required autocomplete="new-password" />
+      <input type="password" id="confirm-password" placeholder="Confirm Password" required autocomplete="new-password" />
+      <button type="submit">Sign Up</button>
+    </form>
+
+    <div class="toggle-dark" onclick="toggleDarkMode()">🌙 Toggle Dark Mode</div>
+
+    <div class="link">
+      Already have an account? <a href="login.html">Log In</a>
+    </div>
+  </div>
+
+  <script>
+    function signup(event) {
+      event.preventDefault();
+
+      const username = document.getElementById("username").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+      const confirmPassword = document.getElementById("confirm-password").value;
+
+      if (password !== confirmPassword) {
+        alert("Passwords do not match!");
+        return;
+      }
+
+      const accounts = JSON.parse(localStorage.getItem("accounts")) || [];
+      const usernameExists = accounts.some(acc => acc.username === username);
+      if (usernameExists) {
+        alert("Username already exists!");
+        return;
+      }
+
+      accounts.push({ username, email, password });
+      localStorage.setItem("accounts", JSON.stringify(accounts));
+      localStorage.setItem("loggedInUser", username);
+
+      alert("Signup successful!");
+      window.location.href = "profile.html";  // Redirect to profile page now
+    }
+
+    function toggleDarkMode() {
+      document.body.classList.toggle("dark-mode");
+    }
+  </script>
+</body>
+</html>
