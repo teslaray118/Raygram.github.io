@@ -3,23 +3,23 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tech App</title>
+    <title>PhotoShare</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
-        /* General Styles - Tech theme */
+        /* General Styles - Instagram-like theme */
         :root {
-            --tech-primary-bg: #f0f2f5;
-            --tech-card-bg: #ffffff;
-            --tech-border: #dcdfe6;
-            --tech-text: #2c3e50;
-            --tech-secondary-text: #7f8c8d;
-            --tech-blue: #3498db;
-            --tech-green: #2ecc71;
-            --tech-red: #e74c3c;
-            --tech-hover-bg: #ecf0f1;
+            --app-primary-bg: #fafafa;
+            --app-card-bg: #ffffff;
+            --app-border: #dbdbdb;
+            --app-text: #262626;
+            --app-secondary-text: #8e8e8e;
+            --app-blue: #0095f6;
+            --app-green: #38a169;
+            --app-red: #ed4956;
+            --app-hover-bg: #f5f5f5;
         }
 
         * {
@@ -30,8 +30,8 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background-color: var(--tech-primary-bg);
-            color: var(--tech-text);
+            background-color: var(--app-primary-bg);
+            color: var(--app-text);
             display: flex;
             height: 100vh;
         }
@@ -39,8 +39,8 @@
         /* Sidebar navigation */
         .sidebar {
             width: 73px; /* Collapsed width */
-            background-color: var(--tech-card-bg);
-            border-right: 1px solid var(--tech-border);
+            background-color: var(--app-card-bg);
+            border-right: 1px solid var(--app-border);
             padding: 20px 12px;
             display: flex;
             flex-direction: column;
@@ -51,12 +51,12 @@
             width: 250px; /* Expanded width on hover */
         }
 
-        /* Tech Logo (Updated) */
+        /* New Logo */
         .logo {
             font-size: 24px;
             font-weight: 700;
             margin-bottom: 30px;
-            color: var(--tech-text);
+            color: var(--app-text);
             text-align: center;
             display: flex;
             align-items: center;
@@ -71,7 +71,7 @@
         
         .logo-icon {
             font-size: 28px;
-            color: var(--tech-blue);
+            color: var(--app-blue);
         }
 
         .sidebar:hover .logo-full {
@@ -82,7 +82,6 @@
             display: inline-block;
         }
         
-        /* Nav items and other styles remain the same from your original code */
         .nav-item {
             display: flex;
             align-items: center;
@@ -91,14 +90,14 @@
             margin-bottom: 10px;
             font-weight: 600;
             cursor: pointer;
-            color: var(--tech-text);
+            color: var(--app-text);
             border-radius: 8px;
             transition: background-color 0.2s;
         }
 
         .nav-item i {
             font-size: 20px;
-            color: var(--tech-secondary-text);
+            color: var(--app-secondary-text);
             min-width: 24px;
         }
         
@@ -111,21 +110,21 @@
         }
 
         .nav-item:hover {
-            background-color: var(--tech-hover-bg);
+            background-color: var(--app-hover-bg);
         }
 
         .nav-item.active {
             font-weight: 700;
-            color: var(--tech-blue);
+            color: var(--app-blue);
         }
 
         .nav-item.active i {
-            color: var(--tech-blue);
+            color: var(--app-blue);
         }
 
         #usernameDisplay {
             margin-top: auto;
-            color: var(--tech-secondary-text);
+            color: var(--app-secondary-text);
             font-size: 14px;
             padding: 12px;
         }
@@ -146,10 +145,10 @@
             padding: 20px;
             font-size: 24px;
             font-weight: 600;
-            border-bottom: 1px solid var(--tech-border);
+            border-bottom: 1px solid var(--app-border);
         }
         
-        /* Shorts/Reels Section (New Styles) */
+        /* Shorts/Reels Section */
         #home {
             display: flex;
             flex-direction: column;
@@ -162,10 +161,10 @@
         .shorts-reel {
             width: 100%;
             max-width: 450px;
-            background: var(--tech-card-bg);
+            background: var(--app-card-bg);
             border-radius: 12px;
             overflow: hidden;
-            border: 1px solid var(--tech-border);
+            border: 1px solid var(--app-border);
             box-shadow: 0 4px 8px rgba(0,0,0,0.05);
         }
         
@@ -203,7 +202,7 @@
         .messages-container {
             display: flex;
             flex: 1;
-            background: var(--tech-card-bg);
+            background: var(--app-card-bg);
         }
         
         .messages-container .content-header {
@@ -213,8 +212,8 @@
         /* User list */
         .user-list {
             width: 380px;
-            background: var(--tech-card-bg);
-            border-right: 1px solid var(--tech-border);
+            background: var(--app-card-bg);
+            border-right: 1px solid var(--app-border);
             overflow-y: auto;
             display: flex;
             flex-direction: column;
@@ -224,7 +223,7 @@
             padding: 24px 20px;
             font-size: 24px;
             font-weight: 600;
-            border-bottom: 1px solid var(--tech-border);
+            border-bottom: 1px solid var(--app-border);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -236,12 +235,12 @@
             padding: 12px 20px;
             gap: 12px;
             cursor: pointer;
-            border-bottom: 1px solid var(--tech-border);
+            border-bottom: 1px solid var(--app-border);
             transition: background-color 0.2s;
         }
 
         .user-item:hover, .user-item.active-chat {
-            background: var(--tech-hover-bg);
+            background: var(--app-hover-bg);
         }
 
         .profile-pic {
@@ -253,7 +252,7 @@
         }
         
         .profile-pic.online {
-            border-color: var(--tech-green);
+            border-color: var(--app-green);
         }
 
         .username {
@@ -265,12 +264,12 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            background: var(--tech-card-bg);
+            background: var(--app-card-bg);
         }
         
         .chat-header {
             padding: 15px 20px;
-            border-bottom: 1px solid var(--tech-border);
+            border-bottom: 1px solid var(--app-border);
             display: flex;
             align-items: center;
             gap: 12px;
@@ -287,14 +286,14 @@
         
         .chat-status {
             font-size: 12px;
-            color: var(--tech-secondary-text);
+            color: var(--app-secondary-text);
         }
 
         .chat-log {
             flex: 1;
             padding: 20px;
             overflow-y: auto;
-            background: var(--tech-primary-bg);
+            background: var(--app-primary-bg);
             display: flex;
             flex-direction: column;
             gap: 10px;
@@ -307,19 +306,19 @@
         }
         
         .message.received {
-            background-color: var(--tech-border);
+            background-color: var(--app-border);
             align-self: flex-start;
         }
         
         .message.sent {
-            background-color: var(--tech-blue);
+            background-color: var(--app-blue);
             color: white;
             align-self: flex-end;
         }
 
         .chat-input-wrapper {
             padding: 15px 20px;
-            border-top: 1px solid var(--tech-border);
+            border-top: 1px solid var(--app-border);
         }
 
         .chat-input {
@@ -327,9 +326,9 @@
             align-items: center;
             gap: 10px;
             padding: 12px 20px;
-            border: 1px solid var(--tech-border);
+            border: 1px solid var(--app-border);
             border-radius: 24px;
-            background-color: var(--tech-hover-bg);
+            background-color: var(--app-hover-bg);
         }
 
         .chat-input input {
@@ -343,7 +342,7 @@
         .chat-input button {
             background: none;
             border: none;
-            color: var(--tech-blue);
+            color: var(--app-blue);
             font-weight: 600;
             cursor: pointer;
         }
@@ -361,7 +360,7 @@
                 flex-direction: row;
                 justify-content: space-around;
                 border-right: none;
-                border-top: 1px solid var(--tech-border);
+                border-top: 1px solid var(--app-border);
                 position: fixed;
                 bottom: 0;
                 z-index: 1000;
@@ -426,10 +425,10 @@
 <body>
     <div class="sidebar">
         <div class="logo">
-            <i class="fa-solid fa-code logo-icon"></i>
-            <span class="logo-full">TechConnect</span>
+            <i class="fa-solid fa-camera logo-icon"></i>
+            <span class="logo-full">PhotoShare</span>
         </div>
-        <div class="nav-item active" onclick="switchSection('home', this)"><i class="fa-solid fa-bolt"></i><span>Reels</span></div>
+        <div class="nav-item active" onclick="switchSection('home', this)"><i class="fa-solid fa-house"></i><span>Home</span></div>
         <div class="nav-item" onclick="switchSection('explore', this)"><i class="fa-regular fa-compass"></i><span>Explore</span></div>
         <div class="nav-item" onclick="switchSection('messages', this)"><i class="fa-solid fa-paper-plane"></i><span>Messages</span></div>
         <div class="nav-item" onclick="switchSection('notifications', this)"><i class="fa-regular fa-heart"></i><span>Notifications</span></div>
@@ -439,32 +438,32 @@
     </div>
 
     <div class="main-content" id="home">
-        <h2 class="content-header">Shorts/Reels</h2>
+        <h2 class="content-header">Reels</h2>
         <div class="shorts-reel">
             <div class="shorts-header">
                 <div class="shorts-profile-pic"></div>
-                <div class="shorts-username">tech_innovator</div>
+                <div class="shorts-username">john_doe</div>
             </div>
             <div class="shorts-video">
-                Video 1: Building a new app
+                Video 1: Cityscape time-lapse
             </div>
         </div>
         <div class="shorts-reel">
             <div class="shorts-header">
                 <div class="shorts-profile-pic"></div>
-                <div class="shorts-username">coding_wizard</div>
+                <div class="shorts-username">jane_smith</div>
             </div>
             <div class="shorts-video">
-                Video 2: AI in action
+                Video 2: A day at the beach
             </div>
         </div>
         <div class="shorts-reel">
             <div class="shorts-header">
                 <div class="shorts-profile-pic"></div>
-                <div class="shorts-username">future_dev</div>
+                <div class="shorts-username">photographer123</div>
             </div>
             <div class="shorts-video">
-                Video 3: My new project
+                Video 3: My latest creation
             </div>
         </div>
     </div>
@@ -635,7 +634,7 @@
             setInterval(fetchAccounts, 5000);
             setInterval(() => { if (currentChatUser) loadMessages(); }, 3000);
             
-            // Set 'Reels' as the default active section
+            // Set 'Home' as the default active section
             switchSection('home', document.querySelector('.nav-item:nth-child(2)'));
         };
     </script>
