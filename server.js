@@ -1,80 +1,84 @@
 const express = require('express');
+const bodyParser = require('body-parser');
+const session = require('express-session');
+const cors = require('cors');
 const app = express();
-const fs = require('fs');
-const path = require('path');
-
 const PORT = 3000;
-let accounts = [
-    { username: 'daley', email: 'daley@example.com', password: 'password123', online: true },
-    { username: 'john_doe', email: 'john@example.com', password: 'password123', online: false },
-    { username: 'jane_smith', email: 'jane@example.com', password: 'password123', online: true },
-    { username: 'alice', email: 'alice@example.com', password: 'password123', online: false },
-];
-let messages = []; // Store messages here temporarily
 
-app.use(express.json());
-app.use(express.static(path.join(__dirname))); // Serve HTML/CSS/JS
+app.use(cors());
+app.use(bodyParser.json());
+app.use(express.static(__dirname));
+app.use(session({
+  secret: 'raygram_secret',
+  resave: false,
+  saveUninitialized: true
+}));
 
-// Helper: Get client IP (optional)
-function getClientIp(req) {
-    return req.headers['x-forwarded-for'] || req.socket.remoteAddress;
-}
+// Store users and messages in memory
+let users = []; // { username, password }
+let messages = []; // { from, to, message, timestamp }
 
-// --- ACCOUNTS ---
-
-app.get('/accounts', (req, res) => {
-    res.json(accounts);
-});
-
-app.post('/login', (req, res) => {
-    const { username, password } = req.body;
-    const user = accounts.find(a => a.username === username && a.password === password);
-
-    if (user) {
-        user.online = true;
-        res.json({ success: true });
-    } else {
-        res.status(401).json({ success: false, message: 'Invalid credentials' });
-    }
-});
-
+// Signup
 app.post('/signup', (req, res) => {
-    const { username, email, password } = req.body;
-    if (accounts.find(a => a.username === username)) {
-        return res.status(409).json({ message: 'Username already exists' });
-    }
-    accounts.push({ username, email, password, online: false });
-    res.json({ success: true });
+  const { username, password } = req.body;
+  if (users.find(u => u.username === username)) {
+    return res.status(400).json({ error: 'Username already exists' });
+  }
+  users.push({ username, password });
+  res.json({ success: true });
 });
 
+// Login
+app.post('/login', (req, res) => {
+  const { username, password } = req.body;
+  const user = users.find(u => u.username === username && u.password === password);
+  if (!user) {
+    return res.status(400).json({ error: 'Invalid credentials' });
+  }
+  req.session.username = username;
+  res.json({ success: true });
+});
+
+// Logout
 app.post('/logout', (req, res) => {
-    const { username } = req.body;
-    const user = accounts.find(a => a.username === username);
-    if (user) user.online = false;
-    res.json({ success: true });
+  req.session.destroy();
+  res.json({ success: true });
 });
 
-// --- MESSAGING ---
+// Get account list (excluding self)
+app.get('/accounts', (req, res) => {
+  if (!req.session.username) return res.status(401).json({ error: 'Not logged in' });
+  const accountList = users
+    .filter(u => u.username !== req.session.username)
+    .map(u => ({ username: u.username }));
+  res.json(accountList);
+});
 
-// Send a message
+// Send message
 app.post('/message', (req, res) => {
-    const { from, to, message } = req.body;
-    const timestamp = new Date().toISOString();
-    messages.push({ from, to, message, timestamp });
-    res.json({ success: true });
+  const { to, message } = req.body;
+  if (!req.session.username) return res.status(401).json({ error: 'Not logged in' });
+  messages.push({
+    from: req.session.username,
+    to,
+    message,
+    timestamp: new Date()
+  });
+  res.json({ success: true });
 });
 
 // Get messages between two users
-app.post('/get-messages', (req, res) => {
-    const { user1, user2 } = req.body;
-    const chat = messages.filter(
-        msg =>
-        (msg.from === user1 && msg.to === user2) ||
-        (msg.from === user2 && msg.to === user1)
-    );
-    res.json(chat);
+app.get('/get-messages', (req, res) => {
+  const { withUser } = req.query;
+  if (!req.session.username) return res.status(401).json({ error: 'Not logged in' });
+  const chat = messages.filter(
+    m =>
+      (m.from === req.session.username && m.to === withUser) ||
+      (m.from === withUser && m.to === req.session.username)
+  );
+  res.json(chat);
 });
 
 app.listen(PORT, () => {
-    console.log(`Server running at http://localhost:${PORT}`);
+  console.log(`Raygram server running at http://localhost:${PORT}`);
 });
