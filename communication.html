@@ -1,643 +1,630 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tech App</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    <style>
-        /* General Styles - Tech theme */
-        :root {
-            --tech-primary-bg: #f0f2f5;
-            --tech-card-bg: #ffffff;
-            --tech-border: #dcdfe6;
-            --tech-text: #2c3e50;
-            --tech-secondary-text: #7f8c8d;
-            --tech-blue: #3498db;
-            --tech-green: #2ecc71;
-            --tech-red: #e74c3c;
-            --tech-hover-bg: #ecf0f1;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Raygram</title>
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+  <!-- Inter + Font Awesome -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--tech-primary-bg);
-            color: var(--tech-text);
-            display: flex;
-            height: 100vh;
-        }
+  <style>
+    :root{
+      --bg:#f7f7f8;
+      --card:#fff;
+      --border:#e5e7eb;
+      --text:#111827;
+      --muted:#6b7280;
+      --brand:#2563eb;
+      --green:#22c55e;
+      --red:#ef4444;
+      --hover:#f3f4f6;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+      color:var(--text); background:var(--bg); display:flex;
+    }
 
-        /* Sidebar navigation */
-        .sidebar {
-            width: 73px; /* Collapsed width */
-            background-color: var(--tech-card-bg);
-            border-right: 1px solid var(--tech-border);
-            padding: 20px 12px;
-            display: flex;
-            flex-direction: column;
-            transition: width 0.3s ease;
-        }
+    /* Sidebar / bottom-nav */
+    .sidebar{
+      width:76px; background:var(--card); border-right:1px solid var(--border);
+      padding:14px 10px; display:flex; flex-direction:column; gap:8px;
+      transition:width .25s ease;
+    }
+    .sidebar:hover{width:240px}
+    .logo{display:flex; align-items:center; gap:10px; padding:10px; margin-bottom:8px; font-weight:700}
+    .logo i{color:var(--brand)}
+    .logo span{display:none}
+    .sidebar:hover .logo span{display:inline}
 
-        .sidebar:hover {
-            width: 250px; /* Expanded width on hover */
-        }
+    .nav-item{
+      display:flex; align-items:center; gap:12px; padding:10px 12px; border-radius:10px;
+      cursor:pointer; color:var(--text); font-weight:600;
+    }
+    .nav-item i{width:22px; text-align:center; color:var(--muted)}
+    .nav-item:hover{background:var(--hover)}
+    .nav-item.active, .nav-item.active i{color:var(--brand)}
+    .nav-item span{display:none}
+    .sidebar:hover .nav-item span{display:inline}
+    #usernameDisplay{margin-top:auto; padding:10px; color:var(--muted); font-size:13px}
 
-        /* Tech Logo (Updated) */
-        .logo {
-            font-size: 24px;
-            font-weight: 700;
-            margin-bottom: 30px;
-            color: var(--tech-text);
-            text-align: center;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            padding: 12px;
-        }
-        
-        .logo-full {
-            display: none;
-            font-size: 20px;
-        }
-        
-        .logo-icon {
-            font-size: 28px;
-            color: var(--tech-blue);
-        }
+    /* Main sections */
+    .main{flex:1; display:none; flex-direction:column; min-width:0}
+    .main.active{display:flex}
+    .header{
+      display:flex; align-items:center; justify-content:space-between;
+      padding:14px 18px; background:var(--card); border-bottom:1px solid var(--border);
+      position:sticky; top:0; z-index:5;
+    }
+    .header h2{margin:0; font-size:20px}
+    .container{padding:18px; display:flex; gap:18px; min-height:0; flex:1}
+    .col{background:transparent; flex:1; min-width:0}
 
-        .sidebar:hover .logo-full {
-            display: block;
-        }
-        
-        .sidebar:hover .logo-icon {
-            display: inline-block;
-        }
-        
-        /* Nav items and other styles remain the same from your original code */
-        .nav-item {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            padding: 12px;
-            margin-bottom: 10px;
-            font-weight: 600;
-            cursor: pointer;
-            color: var(--tech-text);
-            border-radius: 8px;
-            transition: background-color 0.2s;
-        }
+    /* Feed (Home) */
+    .feed{max-width:680px; margin:0 auto; width:100%}
+    .composer{
+      background:var(--card); border:1px solid var(--border); border-radius:12px; padding:12px; margin-bottom:16px;
+      display:flex; align-items:center; gap:10px;
+    }
+    .composer input{flex:1; border:1px solid var(--border); border-radius:999px; padding:10px 14px; outline:none; background:#fff}
+    .btn{border:none; background:var(--brand); color:#fff; padding:10px 14px; border-radius:10px; font-weight:600; cursor:pointer}
+    .btn[disabled]{opacity:.6; cursor:not-allowed}
+    .btn.outline{background:#fff; color:var(--brand); border:1px solid var(--brand)}
+    .post-card{
+      background:var(--card); border:1px solid var(--border); border-radius:12px; margin-bottom:14px; overflow:hidden;
+    }
+    .post-head{display:flex; align-items:center; gap:10px; padding:12px}
+    .avatar{width:40px; height:40px; border-radius:999px; object-fit:cover; background:#e5e7eb; border:1px solid var(--border)}
+    .post-username{font-weight:700}
+    .post-body{padding:0 12px 12px 12px; white-space:pre-wrap}
+    .post-time{color:var(--muted); font-size:12px}
 
-        .nav-item i {
-            font-size: 20px;
-            color: var(--tech-secondary-text);
-            min-width: 24px;
-        }
-        
-        .nav-item span {
-            display: none;
-        }
-        
-        .sidebar:hover .nav-item span {
-            display: inline-block;
-        }
+    /* Reels */
+    .reels-wrap{max-width:520px; margin:0 auto; display:flex; flex-direction:column; gap:16px}
+    .reel{
+      border:1px solid var(--border); border-radius:14px; overflow:hidden; background:var(--card);
+    }
+    .reel video, .reel .ph{
+      width:100%; height:520px; background:#000; display:flex; align-items:center; justify-content:center; color:#fff; font-weight:600;
+    }
+    .reel .meta{display:flex; align-items:center; gap:10px; padding:10px}
 
-        .nav-item:hover {
-            background-color: var(--tech-hover-bg);
-        }
+    /* Messages */
+    .messages{
+      display:flex; gap:0; background:var(--card); border:1px solid var(--border); border-radius:12px; overflow:hidden; height:calc(100vh - 120px)
+    }
+    .users{
+      width:300px; border-right:1px solid var(--border); overflow:auto
+    }
+    .users h3{margin:0; padding:14px; border-bottom:1px solid var(--border)}
+    .user-item{display:flex; align-items:center; gap:10px; padding:10px 14px; cursor:pointer; border-bottom:1px solid var(--border)}
+    .user-item:hover{background:var(--hover)}
+    .user-item.active{background:#eef2ff}
+    .user-item .dot{width:10px; height:10px; border-radius:999px; background:#d1d5db}
+    .user-item .dot.online{background:var(--green)}
+    .chat{flex:1; display:flex; flex-direction:column}
+    .chat-head{display:flex; align-items:center; gap:10px; padding:12px; border-bottom:1px solid var(--border)}
+    .chat-log{flex:1; overflow:auto; background:#f3f4f6; padding:12px; display:flex; flex-direction:column; gap:8px}
+    .bubble{max-width:65%; padding:10px 12px; border-radius:16px; font-size:15px}
+    .bubble.me{align-self:flex-end; background:var(--brand); color:#fff}
+    .bubble.them{align-self:flex-start; background:#e5e7eb}
+    .chat-input{display:flex; gap:8px; padding:12px; border-top:1px solid var(--border); background:#fff}
+    .chat-input input{flex:1; padding:10px 12px; border:1px solid var(--border); border-radius:999px; outline:none}
 
-        .nav-item.active {
-            font-weight: 700;
-            color: var(--tech-blue);
-        }
+    /* Profile & Explore */
+    .profile-card{
+      background:var(--card); border:1px solid var(--border); border-radius:12px; padding:14px; display:flex; gap:14px; align-items:center
+    }
+    .profile-card .big{width:96px; height:96px; border-radius:999px; object-fit:cover; border:1px solid var(--border); background:#e5e7eb}
+    .stats{display:flex; gap:18px; color:var(--muted)}
+    .grid{display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:14px}
+    .tile{aspect-ratio:1/1; background:#e5e7eb; border-radius:10px; display:flex; align-items:center; justify-content:center; color:#6b7280; font-weight:600; border:1px solid var(--border)}
 
-        .nav-item.active i {
-            color: var(--tech-blue);
-        }
+    .explore-list{background:var(--card); border:1px solid var(--border); border-radius:12px}
+    .explore-item{display:flex; align-items:center; justify-content:space-between; gap:10px; padding:12px 14px; border-bottom:1px solid var(--border)}
+    .explore-item:last-child{border-bottom:0}
 
-        #usernameDisplay {
-            margin-top: auto;
-            color: var(--tech-secondary-text);
-            font-size: 14px;
-            padding: 12px;
-        }
+    /* Toast */
+    .toast{position:fixed; right:14px; bottom:14px; background:#111827; color:#fff; padding:10px 12px; border-radius:10px; opacity:0; transform:translateY(12px); transition:all .2s}
+    .toast.show{opacity:1; transform:translateY(0)}
 
-        /* Main content area */
-        .main-content {
-            flex: 1;
-            display: none;
-            flex-direction: column;
-            overflow: hidden;
-        }
-
-        .main-content.active-section {
-            display: flex !important;
-        }
-
-        .content-header {
-            padding: 20px;
-            font-size: 24px;
-            font-weight: 600;
-            border-bottom: 1px solid var(--tech-border);
-        }
-        
-        /* Shorts/Reels Section (New Styles) */
-        #home {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 20px;
-            gap: 20px;
-            overflow-y: auto;
-        }
-        
-        .shorts-reel {
-            width: 100%;
-            max-width: 450px;
-            background: var(--tech-card-bg);
-            border-radius: 12px;
-            overflow: hidden;
-            border: 1px solid var(--tech-border);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-        }
-        
-        .shorts-header {
-            display: flex;
-            align-items: center;
-            padding: 12px;
-            gap: 12px;
-        }
-        
-        .shorts-profile-pic {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: #eee;
-        }
-        
-        .shorts-username {
-            font-weight: 600;
-        }
-        
-        .shorts-video {
-            width: 100%;
-            height: 500px;
-            background-color: #000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 18px;
-            cursor: pointer;
-        }
-        
-        /* Messages layout */
-        .messages-container {
-            display: flex;
-            flex: 1;
-            background: var(--tech-card-bg);
-        }
-        
-        .messages-container .content-header {
-            border-bottom: none;
-        }
-
-        /* User list */
-        .user-list {
-            width: 380px;
-            background: var(--tech-card-bg);
-            border-right: 1px solid var(--tech-border);
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .user-list-header {
-            padding: 24px 20px;
-            font-size: 24px;
-            font-weight: 600;
-            border-bottom: 1px solid var(--tech-border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .user-item {
-            display: flex;
-            align-items: center;
-            padding: 12px 20px;
-            gap: 12px;
-            cursor: pointer;
-            border-bottom: 1px solid var(--tech-border);
-            transition: background-color 0.2s;
-        }
-
-        .user-item:hover, .user-item.active-chat {
-            background: var(--tech-hover-bg);
-        }
-
-        .profile-pic {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background-color: #eee;
-            border: 2px solid #ccc;
-        }
-        
-        .profile-pic.online {
-            border-color: var(--tech-green);
-        }
-
-        .username {
-            font-weight: 600;
-        }
-
-        /* Chat area */
-        .chat-area {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            background: var(--tech-card-bg);
-        }
-        
-        .chat-header {
-            padding: 15px 20px;
-            border-bottom: 1px solid var(--tech-border);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        
-        .chat-header-info {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .chat-header h3 {
-            font-weight: 600;
-        }
-        
-        .chat-status {
-            font-size: 12px;
-            color: var(--tech-secondary-text);
-        }
-
-        .chat-log {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-            background: var(--tech-primary-bg);
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .message {
-            max-width: 60%;
-            padding: 10px 15px;
-            border-radius: 20px;
-        }
-        
-        .message.received {
-            background-color: var(--tech-border);
-            align-self: flex-start;
-        }
-        
-        .message.sent {
-            background-color: var(--tech-blue);
-            color: white;
-            align-self: flex-end;
-        }
-
-        .chat-input-wrapper {
-            padding: 15px 20px;
-            border-top: 1px solid var(--tech-border);
-        }
-
-        .chat-input {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 12px 20px;
-            border: 1px solid var(--tech-border);
-            border-radius: 24px;
-            background-color: var(--tech-hover-bg);
-        }
-
-        .chat-input input {
-            flex: 1;
-            border: none;
-            background: transparent;
-            outline: none;
-            font-size: 16px;
-        }
-
-        .chat-input button {
-            background: none;
-            border: none;
-            color: var(--tech-blue);
-            font-weight: 600;
-            cursor: pointer;
-        }
-        
-        .chat-input button:disabled {
-            color: #b2dffc;
-            cursor: not-allowed;
-        }
-
-        /* Mobile responsiveness */
-        @media (max-width: 768px) {
-            .sidebar {
-                width: 100%;
-                height: 60px;
-                flex-direction: row;
-                justify-content: space-around;
-                border-right: none;
-                border-top: 1px solid var(--tech-border);
-                position: fixed;
-                bottom: 0;
-                z-index: 1000;
-            }
-            
-            .sidebar:hover {
-                width: 100%;
-            }
-
-            body {
-                flex-direction: column;
-            }
-
-            .logo, #usernameDisplay, .sidebar:hover .nav-item span {
-                display: none;
-            }
-
-            .nav-item {
-                flex-direction: column;
-                gap: 5px;
-                padding: 5px;
-                font-size: 12px;
-            }
-            
-            .nav-item i {
-                font-size: 22px;
-            }
-
-            .main-content {
-                margin-bottom: 60px; /* Space for the fixed bottom nav */
-            }
-
-            #messages .messages-container {
-                flex-direction: column;
-            }
-
-            .user-list {
-                width: 100%;
-                height: 100%;
-                position: absolute;
-                top: 0;
-                left: 0;
-                z-index: 999;
-                display: none;
-            }
-
-            .user-list.active {
-                display: flex;
-            }
-            
-            .chat-area {
-                z-index: 1000;
-            }
-            
-            /* Mobile-specific button to show/hide user list */
-            .show-user-list-btn {
-                display: block;
-            }
-        }
-    </style>
+    /* Mobile */
+    @media (max-width:900px){
+      body{flex-direction:column}
+      .sidebar{
+        width:100%; height:64px; position:fixed; bottom:0; left:0; right:0; border-right:0; border-top:1px solid var(--border);
+        flex-direction:row; justify-content:space-around; gap:0; padding:8px 10px; z-index:50
+      }
+      .sidebar:hover{width:100%}
+      .logo, .sidebar:hover .nav-item span, .nav-item span, #usernameDisplay{display:none}
+      .nav-item{border-radius:10px; padding:6px 8px}
+      .header{top:0}
+      .container{padding:12px; margin-bottom:72px}
+      .messages{height:calc(100vh - 180px)}
+      .users{width:100%; display:none}
+      .users.show{display:block; position:absolute; left:0; right:0; top:0; bottom:0; z-index:20}
+    }
+  </style>
 </head>
 <body>
-    <div class="sidebar">
-        <div class="logo">
-            <i class="fa-solid fa-code logo-icon"></i>
-            <span class="logo-full">TechConnect</span>
+
+  <!-- Sidebar / Bottom nav -->
+  <aside class="sidebar">
+    <div class="logo"><i class="fa-solid fa-bolt"></i><span>Raygram</span></div>
+    <div class="nav-item active" data-section="home" onclick="switchSection('home', this)"><i class="fa-solid fa-house"></i><span>Home</span></div>
+    <div class="nav-item" data-section="reels" onclick="switchSection('reels', this)"><i class="fa-solid fa-film"></i><span>Reels</span></div>
+    <div class="nav-item" data-section="messages" onclick="switchSection('messages', this)"><i class="fa-solid fa-paper-plane"></i><span>Messages</span></div>
+    <div class="nav-item" data-section="explore" onclick="switchSection('explore', this)"><i class="fa-regular fa-compass"></i><span>Explore</span></div>
+    <div class="nav-item" data-section="profile" onclick="switchSection('profile', this)"><i class="fa-regular fa-user"></i><span>Profile</span></div>
+    <div class="nav-item" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></div>
+    <div id="usernameDisplay">Welcome</div>
+  </aside>
+
+  <!-- HOME -->
+  <section id="home" class="main active">
+    <div class="header"><h2>Home</h2></div>
+    <div class="container">
+      <div class="col feed">
+        <div class="composer">
+          <img id="homeAvatar" class="avatar" alt="" />
+          <input id="postInput" placeholder="Share something..." />
+          <button class="btn" id="postBtn">Post</button>
         </div>
-        <div class="nav-item active" onclick="switchSection('home', this)"><i class="fa-solid fa-bolt"></i><span>Reels</span></div>
-        <div class="nav-item" onclick="switchSection('explore', this)"><i class="fa-regular fa-compass"></i><span>Explore</span></div>
-        <div class="nav-item" onclick="switchSection('messages', this)"><i class="fa-solid fa-paper-plane"></i><span>Messages</span></div>
-        <div class="nav-item" onclick="switchSection('notifications', this)"><i class="fa-regular fa-heart"></i><span>Notifications</span></div>
-        <div class="nav-item" onclick="switchSection('profile', this)"><i class="fa-regular fa-user"></i><span>Profile</span></div>
-        <div class="nav-item" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></div>
-        <div id="usernameDisplay">Welcome</div>
+        <div id="feedList"></div>
+      </div>
     </div>
+  </section>
 
-    <div class="main-content" id="home">
-        <h2 class="content-header">Shorts/Reels</h2>
-        <div class="shorts-reel">
-            <div class="shorts-header">
-                <div class="shorts-profile-pic"></div>
-                <div class="shorts-username">tech_innovator</div>
-            </div>
-            <div class="shorts-video">
-                Video 1: Building a new app
-            </div>
+  <!-- REELS -->
+  <section id="reels" class="main">
+    <div class="header"><h2>Reels</h2></div>
+    <div class="container">
+      <div class="col reels-wrap" id="reelsList">
+        <div class="reel">
+          <div class="meta">
+            <img class="avatar" alt="avatar"/>
+            <div><div class="post-username">raygram</div><div class="post-time">Sample reel</div></div>
+          </div>
+          <div class="ph">Upload reels support on the server to play videos here</div>
         </div>
-        <div class="shorts-reel">
-            <div class="shorts-header">
-                <div class="shorts-profile-pic"></div>
-                <div class="shorts-username">coding_wizard</div>
-            </div>
-            <div class="shorts-video">
-                Video 2: AI in action
-            </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MESSAGES -->
+  <section id="messages" class="main">
+    <div class="header">
+      <h2>Messages</h2>
+      <button class="btn outline" id="toggleUsers" onclick="toggleUsers()">People</button>
+    </div>
+    <div class="container">
+      <div class="messages">
+        <div class="users" id="accountsList">
+          <h3>Messages</h3>
+          <div style="padding:12px; color:var(--muted)">Loading…</div>
         </div>
-        <div class="shorts-reel">
-            <div class="shorts-header">
-                <div class="shorts-profile-pic"></div>
-                <div class="shorts-username">future_dev</div>
+        <div class="chat">
+          <div class="chat-head">
+            <img id="chatAvatar" class="avatar" alt=""/>
+            <div>
+              <div id="chatWith" class="post-username">Select a user</div>
+              <div id="chatStatus" class="post-time"></div>
             </div>
-            <div class="shorts-video">
-                Video 3: My new project
-            </div>
+          </div>
+          <div class="chat-log" id="chatLog"></div>
+          <div class="chat-input">
+            <input id="chatInput" placeholder="Message…" />
+            <button class="btn" id="sendBtn" onclick="sendMessage()" disabled>Send</button>
+          </div>
         </div>
+      </div>
     </div>
-    
-    <div class="main-content" id="explore">
-        <h2 class="content-header">Explore</h2>
-    </div>
+  </section>
 
-    <div class="main-content" id="messages">
-        <div class="messages-container">
-            <div class="user-list" id="accounts-list">
-                <h2 class="user-list-header">
-                    Messages
-                    <i class="fa-solid fa-arrow-left" id="backToUserList" onclick="showUserList()"></i>
-                </h2>
-                <div style="padding: 20px; text-align: center;">Loading...</div>
-            </div>
-            <div class="chat-area">
-                <div class="chat-header" id="chatHeader">
-                    <div class="profile-pic"></div>
-                    <div class="chat-header-info">
-                        <h3 id="chatWith">Select a user to start chatting</h3>
-                        <span class="chat-status"></span>
-                    </div>
-                </div>
-                <div class="chat-log" id="chatLog"></div>
-                <div class="chat-input-wrapper">
-                    <div class="chat-input" style="display:none;">
-                        <input type="text" id="chatInput" placeholder="Message..." />
-                        <button id="sendButton" onclick="sendMessage()">Send</button>
-                    </div>
-                </div>
-            </div>
+  <!-- EXPLORE -->
+  <section id="explore" class="main">
+    <div class="header"><h2>Explore</h2></div>
+    <div class="container">
+      <div class="col">
+        <div class="explore-list" id="exploreList">
+          <div class="explore-item"><span style="color:var(--muted)">Loading…</span></div>
         </div>
+      </div>
     </div>
+  </section>
 
-    <div class="main-content" id="notifications">
-        <h2 class="content-header">Notifications</h2>
+  <!-- PROFILE -->
+  <section id="profile" class="main">
+    <div class="header"><h2>Profile</h2></div>
+    <div class="container">
+      <div class="col" style="max-width:820px; margin:0 auto; width:100%">
+        <div class="profile-card">
+          <img id="profilePic" class="big" alt="profile"/>
+          <div style="flex:1; min-width:0">
+            <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap">
+              <div id="profileUsername" class="post-username"></div>
+              <input id="picInput" type="file" accept="image/*" style="display:none"/>
+              <button class="btn outline" onclick="document.getElementById('picInput').click()">Change Picture</button>
+              <button class="btn" id="profilePostBtn">Post</button>
+            </div>
+            <div class="stats" style="margin-top:8px">
+              <div><b id="statPosts">0</b> posts</div>
+              <div><b id="statFollowers">0</b> followers</div>
+              <div><b id="statFollowing">0</b> following</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid" id="profileGrid"></div>
+      </div>
     </div>
-    <div class="main-content" id="profile">
-        <h2 class="content-header">Profile</h2>
-    </div>
+  </section>
 
-    <script>
-        let currentChatUser = null;
-        const currentUser = localStorage.getItem("username");
+  <div id="toast" class="toast"></div>
 
-        function showUsername() {
-            document.getElementById("usernameDisplay").textContent = currentUser ? "Welcome, " + currentUser : "Guest";
+  <script>
+    // ==== AUTH / STATE (fixed redirect loop) ====
+    // Only redirect AFTER we actually check localStorage AND (if needed) the server response.
+    let currentUser = null;
+    let chattingWith = null;
+    const polling = { accounts:null, messages:null, feed:null };
+    let you = null;
+
+    // ==== UTILS ====
+    const $ = s => document.querySelector(s);
+    const el = (tag, attrs={}, ...kids)=>{
+      const n=document.createElement(tag);
+      Object.entries(attrs).forEach(([k,v])=>{
+        if(k==='class') n.className=v;
+        else if(k==='html') n.innerHTML=v;
+        else if(k==='text') n.textContent=v;
+        else n.setAttribute(k,v);
+      });
+      kids.forEach(k=> n.appendChild(k));
+      return n;
+    };
+    const toast = (msg)=>{
+      const t=$("#toast"); t.textContent=msg; t.classList.add("show");
+      setTimeout(()=>t.classList.remove("show"),1800);
+    };
+    const timeAgo = iso=>{
+      const d=new Date(iso), s=(Date.now()-d.getTime())/1000;
+      if(!iso || isNaN(d)) return "now";
+      if(s<60) return `${Math.floor(s)}s`; if(s<3600) return `${Math.floor(s/60)}m`;
+      if(s<86400) return `${Math.floor(s/3600)}h`; return `${Math.floor(s/86400)}d`;
+    };
+
+    // Centralized fetch helper: handles 401 -> force logout, safe JSON parsing
+    async function api(url, options={}){
+      try{
+        const res = await fetch(url, {
+          ...options,
+          headers: {
+            ...(options.headers||{}),
+            "Cache-Control":"no-store"
+          },
+          credentials: "same-origin"
+        });
+        if(res.status === 401 || res.status === 403){
+          // Session invalid — clear and bounce to login once.
+          safeLogout(true);
+          return Promise.reject(new Error("Unauthorized"));
         }
+        if(!res.ok) throw new Error(`HTTP ${res.status}`);
+        // Try JSON, fall back to text
+        const ct = res.headers.get("content-type") || "";
+        if(ct.includes("application/json")) return await res.json();
+        return await res.text();
+      }catch(err){
+        console.error("api error:", url, err);
+        throw err;
+      }
+    }
 
-        async function fetchAccounts() {
-            try {
-                const res = await fetch('/accounts');
-                const accounts = await res.json();
-                const list = document.getElementById('accounts-list');
-                list.innerHTML = `<h2 class="user-list-header">Messages</h2>`;
-                accounts.forEach(acc => {
-                    if (acc.username !== currentUser) {
-                        const div = document.createElement('div');
-                        div.className = 'user-item';
-                        div.onclick = () => openChat(acc.username, div);
+    function safeLogout(silent=false){
+      try{ localStorage.removeItem("username"); sessionStorage.removeItem("username"); }catch(_){}
+      if(!silent) toast("Logged out");
+      
+    }
 
-                        const pic = document.createElement('div');
-                        pic.className = 'profile-pic' + (acc.online ? ' online' : '');
+    // ==== NAV ====
+    function switchSection(id, btn){
+      document.querySelectorAll(".main").forEach(m=>m.classList.remove("active"));
+      const sec = document.getElementById(id);
+      sec?.classList.add("active");
+      document.querySelectorAll(".nav-item").forEach(n=>n.classList.remove("active"));
+      btn?.classList.add("active");
+    }
 
-                        const name = document.createElement('span');
-                        name.className = 'username';
-                        name.textContent = acc.username;
+    // ==== PROFILE / USER ====
+    async function loadMe(){
+      const data = await api(`/getUser?username=${encodeURIComponent(currentUser)}`);
+      you = data || {};
+      $("#usernameDisplay").textContent = `@${you.username || currentUser}`;
+      $("#profileUsername").textContent = you.username || currentUser;
+      const pic = you.pic || "https://via.placeholder.com/96?text=RG";
+      $("#profilePic").src = pic;
+      $("#homeAvatar").src = pic;
+      $("#chatAvatar").src = pic;
 
-                        div.appendChild(pic);
-                        div.appendChild(name);
-                        list.appendChild(div);
-                    }
-                });
-            } catch (e) {
-                console.error('Failed to fetch accounts:', e);
-                document.getElementById('accounts-list').innerHTML = `<h2 class="user-list-header">Messages</h2><div style="padding: 20px; text-align: center;">Error loading accounts.</div>`;
-            }
+      $("#statFollowers").textContent = (you.followers?.length ?? 0);
+      $("#statFollowing").textContent = (you.following?.length ?? 0);
+
+      await loadProfilePosts();
+    }
+
+    async function uploadProfilePic(file){
+      const fd = new FormData();
+      fd.append("pic", file);
+      fd.append("username", currentUser);
+      try{
+        await api("/uploadProfilePic", { method:"POST", body: fd });
+        toast("Profile picture updated");
+        loadMe();
+      }catch{ toast("Failed to upload"); }
+    }
+
+    $("#picInput").addEventListener("change", e=>{
+      const f=e.target.files?.[0]; if(!f) return;
+      uploadProfilePic(f);
+      e.target.value = "";
+    });
+
+    // ==== POSTS ====
+    async function createPost(text){
+      try{
+        await api("/post", {
+          method:"POST",
+          headers:{ "Content-Type":"application/json" },
+          body: JSON.stringify({ username: currentUser, text })
+        });
+        toast("Posted");
+        $("#postInput").value="";
+        loadFeed(); loadProfilePosts();
+      }catch{ toast("Post failed"); }
+    }
+
+    $("#postBtn").addEventListener("click", ()=>{
+      const v=$("#postInput").value.trim();
+      if(!v) return toast("Type something first");
+      createPost(v);
+    });
+    $("#profilePostBtn").addEventListener("click", ()=>{
+      const v=prompt("Write a caption:");
+      if(!v) return;
+      createPost(v.trim());
+    });
+
+    async function loadFeed(){
+      try{
+        const data = await api("/getPosts");
+        const posts = (data||[]).sort((a,b)=> new Date(b.createdAt||b.timestamp||0) - new Date(a.createdAt||a.timestamp||0));
+        const root = $("#feedList");
+        root.innerHTML = "";
+        if(!posts.length){
+          root.appendChild(el("div",{class:"post-time", text:"No posts yet — be the first!"}));
+          return;
         }
+        posts.forEach(p=>{
+          const head = el("div",{class:"post-head"},
+            el("img",{class:"avatar", src:(p.pic||"https://via.placeholder.com/40?text=R"), alt:""}),
+            el("div",{},
+              el("div",{class:"post-username", html:escapeHtml(p.username||"anonymous")}),
+              el("div",{class:"post-time", text:(p.createdAt? timeAgo(p.createdAt):"now")})
+            )
+          );
+          const body = el("div",{class:"post-body", html:escapeHtml(p.text||"")});
+          const card = el("div",{class:"post-card"}, head, body);
+          root.appendChild(card);
+        });
+      }catch{
+        $("#feedList").innerHTML = `<div class="post-time" style="padding:8px">Failed to load feed</div>`;
+      }
+    }
 
-        function openChat(username, element) {
-            document.querySelectorAll('.user-item').forEach(item => item.classList.remove('active-chat'));
-            element.classList.add('active-chat');
-
-            currentChatUser = username;
-            document.getElementById("chatWith").textContent = username;
-            document.querySelector(".chat-input").style.display = "flex";
-            
-            const pic = document.querySelector('#chatHeader .profile-pic');
-            const status = document.querySelector('.chat-status');
-            pic.className = element.querySelector('.profile-pic').className;
-            status.textContent = pic.classList.contains('online') ? 'Active now' : 'Offline';
-
-            loadMessages();
-
-            // Hide user list and show chat area on mobile
-            if (window.innerWidth <= 768) {
-                document.querySelector('.user-list').classList.remove('active');
-                document.querySelector('.chat-area').style.display = 'flex';
-            }
+    async function loadProfilePosts(){
+      try{
+        const data = await api("/getPosts");
+        const posts = (data||[]).filter(p=>p.username===currentUser);
+        $("#statPosts").textContent = posts.length;
+        const grid = $("#profileGrid");
+        grid.innerHTML = "";
+        if(!posts.length){
+          grid.appendChild(el("div",{class:"tile"}, document.createTextNode("No posts yet")));
+          return;
         }
-        
-        // Function for mobile to go back to user list
-        function showUserList() {
-            if (window.innerWidth <= 768) {
-                document.querySelector('.user-list').classList.add('active');
-                document.querySelector('.chat-area').style.display = 'none';
-            }
-        }
+        posts.forEach((p,idx)=>{
+          grid.appendChild(el("div",{class:"tile"}, document.createTextNode(p.text?.slice(0,40) || `Post #${idx+1}`)));
+        });
+      }catch{
+        // silent
+      }
+    }
 
-        async function loadMessages() {
-            if (!currentChatUser) return;
-            const res = await fetch('/get-messages', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ user1: currentUser, user2: currentChatUser })
-            });
-            const messages = await res.json();
-            const chatLog = document.getElementById('chatLog');
-            chatLog.innerHTML = '';
-            messages.forEach(msg => {
-                const div = document.createElement('div');
-                div.className = 'message ' + (msg.from === currentUser ? 'sent' : 'received');
-                div.textContent = msg.message;
-                chatLog.appendChild(div);
-            });
-            chatLog.scrollTop = chatLog.scrollHeight;
-        }
+    // ==== EXPLORE / FOLLOW ====
+    async function loadExplore(){
+      try{
+        const arr = (await api("/accounts")||[]).filter(u=>u.username!==currentUser);
+        const my = you || (await api(`/getUser?username=${encodeURIComponent(currentUser)}`));
+        const followingSet = new Set(my?.following||[]);
+        const list = $("#exploreList"); list.innerHTML="";
+        if(!arr.length){ list.appendChild(el("div",{class:"explore-item"}, document.createTextNode("No other users yet"))); return; }
 
-        async function sendMessage() {
-            const input = document.getElementById("chatInput");
-            const message = input.value.trim();
-            if (!message || !currentChatUser) return;
-            await fetch('/message', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ from: currentUser, to: currentChatUser, message })
-            });
-            input.value = '';
-            loadMessages();
-        }
+        arr.forEach(acc=>{
+          const row = el("div",{class:"explore-item"});
+          const left = el("div",{style:"display:flex; align-items:center; gap:10px"},
+            el("img",{class:"avatar", src:acc.pic||"https://via.placeholder.com/40?text=R"}),
+            el("div",{}, el("div",{class:"post-username", html:escapeHtml(acc.username)}), el("div",{class:"post-time", text:acc.online?"Online":"Offline"}))
+          );
+          const btn = el("button",{class:"btn outline"});
+          const setBtn = (isFollowing)=>{
+            btn.textContent = isFollowing ? "Unfollow" : "Follow";
+            btn.className = isFollowing ? "btn" : "btn outline";
+          };
+          setBtn(followingSet.has(acc.username));
 
-        function logout() {
-            fetch('/logout', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username: currentUser })
-            }).then(() => {
-                localStorage.removeItem('username');
-                window.location.href = 'login.html';
-            });
-        }
+          btn.addEventListener("click", async ()=>{
+            try{
+              const data = await api("/follow", {
+                method:"POST", headers:{"Content-Type":"application/json"},
+                body: JSON.stringify({ follower: currentUser, followee: acc.username })
+              });
+              setBtn(!!data.following);
+              if(typeof data.followersCount === "number") $("#statFollowers").textContent = data.followersCount;
+              if(typeof data.followingCount === "number") $("#statFollowing").textContent = data.followingCount;
+              toast(data.following ? `Following ${acc.username}` : `Unfollowed ${acc.username}`);
+            }catch{ toast("Follow failed"); }
+          });
 
-        function switchSection(sectionId, element) {
-            document.querySelectorAll('.main-content').forEach(div => div.classList.remove('active-section'));
-            document.getElementById(sectionId).classList.add('active-section');
-            
-            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-            if(element) {
-                element.classList.add('active');
-            }
-        }
+          row.appendChild(left); row.appendChild(btn); list.appendChild(row);
+        });
+      }catch{
+        $("#exploreList").innerHTML = `<div class="explore-item"><span>Failed to load users</span></div>`;
+      }
+    }
 
-        window.onload = () => {
-            showUsername();
-            fetchAccounts();
-            setInterval(fetchAccounts, 5000);
-            setInterval(() => { if (currentChatUser) loadMessages(); }, 3000);
-            
-            // Set 'Reels' as the default active section
-            switchSection('home', document.querySelector('.nav-item:nth-child(2)'));
-        };
-    </script>
+    // ==== MESSAGES ====
+    async function loadAccounts(){
+      try{
+        const accounts = await api("/accounts");
+        const wrap = $("#accountsList");
+        wrap.innerHTML = "<h3>Messages</h3>";
+        accounts.filter(a=>a.username!==currentUser).forEach(acc=>{
+          const item = el("div",{class:"user-item"});
+          item.addEventListener("click", ()=> openChat(acc.username, item, acc));
+          const ava = el("img",{class:"avatar", src:acc.pic||"https://via.placeholder.com/40?text=R"});
+          const info = el("div",{}, el("div",{class:"post-username", html:escapeHtml(acc.username)}), el("div",{class:"post-time", text:acc.online?"Active now":"Offline"}));
+          const dot = el("div",{class:"dot"+(acc.online?" online":"")});
+          item.appendChild(ava); item.appendChild(info); item.appendChild(dot);
+          wrap.appendChild(item);
+        });
+      }catch{
+        const wrap = $("#accountsList");
+        wrap.innerHTML = "<h3>Messages</h3>";
+        wrap.appendChild(el("div",{class:"user-item"}, document.createTextNode("Error loading accounts")));
+      }
+    }
+
+    function toggleUsers(){
+      $("#accountsList").classList.toggle("show");
+    }
+
+    function openChat(username, item, acc){
+      chattingWith = username;
+      $("#chatWith").textContent = username;
+      $("#chatStatus").textContent = acc?.online ? "Active now" : "Offline";
+      $("#sendBtn").disabled = false;
+
+      document.querySelectorAll(".user-item").forEach(i=>i.classList.remove("active"));
+      item?.classList.add("active");
+
+      if(window.innerWidth <= 900){
+        $("#accountsList").classList.remove("show");
+      }
+      loadMessages();
+      if(polling.messages) clearInterval(polling.messages);
+      polling.messages = setInterval(loadMessages, 2500);
+    }
+
+    async function loadMessages(){
+      if(!chattingWith) return;
+      try{
+        const msgs = await api("/get-messages", {
+          method:"POST", headers:{"Content-Type":"application/json"},
+          body: JSON.stringify({ user1: currentUser, user2: chattingWith })
+        });
+        const log = $("#chatLog"); log.innerHTML = "";
+        msgs.forEach(m=>{
+          const b = el("div",{class:"bubble "+(m.from===currentUser?"me":"them")}, document.createTextNode(m.message));
+          log.appendChild(b);
+        });
+        log.scrollTop = log.scrollHeight;
+      }catch{
+        // silent
+      }
+    }
+
+    async function sendMessage(){
+      const input = $("#chatInput");
+      const text = input.value.trim();
+      if(!text || !chattingWith) return;
+      try{
+        await api("/message", {
+          method:"POST", headers:{"Content-Type":"application/json"},
+          body: JSON.stringify({ from: currentUser, to: chattingWith, message: text })
+        });
+        input.value=""; loadMessages();
+      }catch{
+        toast("Message failed");
+      }
+    }
+
+    // ==== AUTH ====
+    function logout(){
+      // best effort, then clear & redirect
+      fetch("/logout", {
+        method:"POST", headers:{"Content-Type":"application/json"},
+        body: JSON.stringify({ username: currentUser })
+      }).finally(()=> safeLogout());
+    }
+
+    // ==== HELPERS ====
+    function escapeHtml(s){
+      return String(s||"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;");
+    }
+
+    // ==== BOOT (with robust auth check) ====
+    async function boot(){
+      // Read username from localStorage/sessionStorage safely
+      currentUser = localStorage.getItem("username") || sessionStorage.getItem("username") || null;
+
+      if(!currentUser){
+        // No client state → bounce
+        safeLogout(true);
+        return;
+      }
+      // mirror into sessionStorage so reloads are stable
+      try{ sessionStorage.setItem("username", currentUser); }catch(_){}
+
+      $("#usernameDisplay").textContent = `Welcome, ${currentUser}`;
+
+      // Load user + core data. Any 401 inside api() will redirect out.
+      try{
+        await loadMe();
+        await Promise.all([loadFeed(), loadAccounts(), loadExplore()]);
+      }catch(err){
+        // If it wasn't an auth error, just show a toast and keep page usable.
+        console.warn(err);
+        toast("Some data failed to load");
+      }
+
+      // Start polling (pause when tab hidden)
+      if(polling.accounts) clearInterval(polling.accounts);
+      polling.accounts = setInterval(()=>{ if(!document.hidden) loadAccounts(); }, 5000);
+      if(polling.feed) clearInterval(polling.feed);
+      polling.feed = setInterval(()=>{ if(!document.hidden) loadFeed(); }, 10000);
+      document.addEventListener("visibilitychange", ()=>{
+        // stop message polling when hidden to save resources
+        if(document.hidden && polling.messages){ clearInterval(polling.messages); polling.messages=null; }
+      });
+    }
+
+    // accessibility: Enter to send
+    $("#chatInput").addEventListener("keydown", (e)=>{
+      if(e.key==="Enter") sendMessage();
+    });
+
+    // Kick it off AFTER DOM is ready to avoid race with storage
+    if(document.readyState === "loading"){
+      document.addEventListener("DOMContentLoaded", boot);
+    }else{
+      boot();
+    }
+  </script>
 </body>
 </html>
